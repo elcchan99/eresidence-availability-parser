@@ -1,5 +1,7 @@
+import sys
 import camelot
 import csv
+
 
 def construct(vacant, table):
     if table.shape == (12, 11):
@@ -28,7 +30,12 @@ def build_vacant():
     return [vacant_1, vacant_2]
 
 if __name__ == '__main__':
-    parsed = camelot.read_pdf('./test.pdf', pages='all')
+    if len(sys.argv) > 1:
+        file = sys.argv[1]
+    else:
+        file = "test.pdf"
+
+    parsed = camelot.read_pdf('./{}'.format(file), pages='all')
     vacant = build_vacant()
     for item in parsed:
         vacant = construct(vacant, item)
