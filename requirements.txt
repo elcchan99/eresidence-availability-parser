@@ -1,1 +1,9 @@
-camelot[cv]
+camelot-py[cv]
+numpy
+scipy
+matplotlib
+ipython
+jupyter
+pandas
+sympy
+nose
