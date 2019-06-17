@@ -1,9 +1,4 @@
 camelot-py[cv]
-numpy
-scipy
-matplotlib
-ipython
-jupyter
-pandas
-sympy
-nose
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
