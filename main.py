@@ -36,6 +36,7 @@ def build_vacant():
     for i, ele in enumerate(vacant_2[:]):
         # not for sold
         ele[6] = 0
+        ele[8] = 0
         vacant_2[i] = ele
     for item in [0, 1, 2, 3, 4, 14, 24, 34]:
         vacant_2[item] = [0 for i in range(10)]
