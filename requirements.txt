@@ -1,2 +1,1 @@
 camelot[cv]
-BeautifulSoup4
