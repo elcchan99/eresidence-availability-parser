@@ -13,7 +13,7 @@ SAMPLE_SPREADSHEET_ID = '1GvzNnqIsr06iV7JaXeL-FjGiJu4R72ENPf9yAQ9i89o'
 SHEET_NAME = 'availability'
 
 def construct(vacant, table):
-    if table.shape == (12, 11):
+    if table.shape[1] == 11:
         df = table.df
         tower = df[3][4:].to_list()
         floor = df[4][4:].to_list()
@@ -28,18 +28,20 @@ def construct(vacant, table):
 
 def build_vacant():
     # 0 stands for not for sale, 1 for vacant, 2 for sold
-    vacant_1 = [[1 for i in range(8)] for i in range(37)]
-    # no such floors
-    for item in [0, 1, 2, 3, 4, 14, 24, 34]:
-        vacant_1[item] = [0 for i in range(8)]
-    vacant_2 = [[1 for i in range(10)] for i in range(37)]
-    for i, ele in enumerate(vacant_2[:]):
-        # not for sold
-        ele[6] = 0
-        ele[8] = 0
-        vacant_2[i] = ele
-    for item in [0, 1, 2, 3, 4, 14, 24, 34]:
-        vacant_2[item] = [0 for i in range(10)]
+    vacant_1 = [[0 for i in range(8)] for i in range(37)]
+    with open('tower1.txt') as t1:
+        for line in t1:
+            floor = int(line.rstrip()[:-1])
+            block = ord(line.rstrip()[-1:]) - 65
+            vacant_1[floor][block] = 1
+
+    vacant_2 = [[0 for i in range(10)] for i in range(37)]
+    with open('tower2.txt') as t2:
+        for line in t2:
+            floor = int(line.rstrip()[:-1])
+            block = ord(line.rstrip()[-1:]) - 65
+            vacant_2[floor][block] = 1
+
     return [vacant_1, vacant_2]
 
 
@@ -127,6 +129,14 @@ if __name__ == '__main__':
         service = build('sheets', 'v4', credentials=creds)
 
         print(f'updating google sheet...')
-        update_sheet(service, 'B2:I38', vacant[0])
-        update_sheet(service, 'K2:T38', vacant[1])
+        t1_start = 'B2'
+        t1_row = len(vacant[0])
+        t1_col = len(vacant[0][0])
+        t1_end = chr(ord(t1_start[0]) + t1_col) + str(int(t1_start[1]) + t1_row)
+        t2_start = chr(ord(t1_end.split(':')[0][0]) + 1) + '2'
+        t2_row = len(vacant[1])
+        t2_col = len(vacant[1][0])
+        t2_end = chr(ord(t2_start[0]) + t2_col) + str(int(t2_start[1]) + t2_row)
+        update_sheet(service, f'{t1_start}:{t1_end}', vacant[0])
+        update_sheet(service, f'{t2_start}:{t2_end}', vacant[1])
 
